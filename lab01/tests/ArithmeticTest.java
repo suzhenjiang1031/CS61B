@@ -16,10 +16,10 @@ public class ArithmeticTest {
     @Order(0)
     @DisplayName("Test product correctness")
     public void testProduct() {
-        assertThat(Arithmetic.product(5, 6)).isEqualTo(30);
-        assertThat(Arithmetic.product(5, -6)).isEqualTo(-30);
-        assertThat(Arithmetic.product(0, -6)).isEqualTo(0);
-        assertThat(Arithmetic.product(-5, -6)).isEqualTo(30);
+        assertThat(lab01.src.Arithmetic.product(5, 6)).isEqualTo(30);
+        assertThat(lab01.src.Arithmetic.product(5, -6)).isEqualTo(-30);
+        assertThat(lab01.src.Arithmetic.product(0, -6)).isEqualTo(0);
+        assertThat(lab01.src.Arithmetic.product(-5, -6)).isEqualTo(30);
     }
 
     /** Performs a few arbitrary tests to see if the sum method is correct */
@@ -27,10 +27,10 @@ public class ArithmeticTest {
     @Order(1)
     @DisplayName("Test sum correctness")
     public void testSum() {
-        assertThat(Arithmetic.sum(5, 6)).isEqualTo(11);
-        assertThat(Arithmetic.sum(5, -6)).isEqualTo(-1);
-        assertThat(Arithmetic.sum(0, -6)).isEqualTo(-6);
-        assertThat(Arithmetic.sum(6, -6)).isEqualTo(0);
-        assertThat(Arithmetic.sum(-5, -5)).isEqualTo(-10);
+        assertThat(lab01.src.Arithmetic.sum(5, 6)).isEqualTo(11);
+        assertThat(lab01.src.Arithmetic.sum(5, -6)).isEqualTo(-1);
+        assertThat(lab01.src.Arithmetic.sum(0, -6)).isEqualTo(-6);
+        assertThat(lab01.src.Arithmetic.sum(6, -6)).isEqualTo(0);
+        assertThat(lab01.src.Arithmetic.sum(-5, -5)).isEqualTo(-10);
     }
 }
