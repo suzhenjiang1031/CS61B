@@ -17,7 +17,7 @@ public class BombMain {
             b.phase1(IntList.of(0, 9, 3, 0, 8)); // Figure this out too
         }
         if (phase >= 2) {
-            b.phase2("747279288");
+            b.phase2("-81201430");
         }
     }
 }
