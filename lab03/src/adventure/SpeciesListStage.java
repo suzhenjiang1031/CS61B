@@ -95,10 +95,9 @@ public class SpeciesListStage implements AdventureStage {
         int similarObjects = 0;
         for (String o : listTwo) {
             if (copy.contains(o)) {
-                similarObjects++;
-                copy.remove(o);
+                return 1;
             }
         }
-        return similarObjects / listOne.size();
+        return 0;
     }
 }
