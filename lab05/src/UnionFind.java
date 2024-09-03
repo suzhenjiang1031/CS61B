@@ -1,30 +1,25 @@
 public class UnionFind {
     private int[] parent;
-    private int[] size;
 
     /* Creates a UnionFind data structure holding N items. Initially, all
        items are in disjoint sets. */
     public UnionFind(int N) {
         parent = new int[N];
-        size = new int[N];
 
         for (int i=0; i < N; i++) {
-         parent[i] = i;
-         size[i] = 1;
+         parent[i] = -1;
         }
     }
 
     /* Returns the size of the setpa V belongs to. */
     public int sizeOf(int v) {
-        int root = find(v);
-        return Math.abs(size[root]);
+        return Math.abs(parent[v]);
     }
 
     /* Returns the parent of V. If V is the root of a tree, returns the
        negative size of the tree for which V is the root. */
     public int parent(int v) {
-        int root = find(v);
-        return root == v ? -size[root] : parent[root];
+        return parent[v];
     }
 
     /* Returns true if nodes/vertices V1 and V2 are connected. */
@@ -35,14 +30,14 @@ public class UnionFind {
     /* Returns the root of the set V belongs to. Path-compression is employed
        allowing for fast search-time. If invalid items are passed into this
        function, throw an IllegalArgumentException. */
-    public int find(int v) {
-        if (v < 0 || v >= parent.length) {
-            throw new IllegalArgumentException("Invalid vertex: " + v);
+    public int find(int p) {
+        if (p < 0 || p >= parent.length) {
+            throw new IllegalArgumentException("Invalid vertex: " + p);
         }
-        if (v != parent[v]) {
-            parent[v] = find(parent[v]);
+        while (parent[p]>=0){
+            p = parent[p];
         }
-        return parent[v];
+        return p;
     }
 
     /* Connects two items V1 and V2 together by connecting their respective
@@ -51,17 +46,20 @@ public class UnionFind {
        root to V2's root. Union-ing an item with itself or items that are
        already connected should not change the structure. */
     public void union(int v1, int v2) {
-        int i = parent(v1);
-        int j = parent(v2);
+        if(connected(v1,v2))
+            return;
 
-        if(i == j) return;
+        int i = find(v1);
+        int j = find(v2);
+        //合并
+        if(sizeOf(i)>=sizeOf(j)){
 
-        if (size[i] < size[j]) {
-            parent[i] = j;
-            size[j] += size[i];
-        } else {
-            parent[j] = i;
-            size[i] += size[j];
+            parent[i]+=parent[j];
+            parent[j]=i;
+        }
+        else{
+            parent[j]+=parent[i];
+            parent[i]=j;
         }
     }
 
