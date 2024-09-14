@@ -123,7 +123,7 @@ public class BSTMap<K extends Comparable<K>, V> implements Map61B<K, V> {
             // 找到了节点，处理三种删除情况
             if (node.left == null) return node.right;
             if (node.right == null) return node.left;
-            // 处理有两个子节点的情况
+            // 处理有两个子节点删除的情况
             Node t = node;
             node = min(t.right);
             node.right = deleteMin(t.right);
