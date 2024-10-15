@@ -34,10 +34,10 @@ public class UnionFind {
         if (v < 0 || v >= parent.length) {
             throw new IllegalArgumentException("Invalid vertax: " + v);
         }
-        while (parent[v] >= 0) {
-            v = parent[v];
+        if (parent[v] >= 0) {
+            parent[v] = find(parent[v]);
         }
-        return v;
+        return parent[v] >= 0 ? parent[v] : v;
         }
 
     /* Connects two items V1 and V2 together by connecting their respective

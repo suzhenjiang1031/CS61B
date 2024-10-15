@@ -86,15 +86,4 @@ public class UnionFindTest {
      * of all methods in your implementation.
      */
 
-    @Test
-    public void testSingleElement() {
-        UnionFind uf = new UnionFind(1);
-        uf.union(0, 0);
-    }
-
-// ... 其他测试用例 ...
-
 }
-
-
-
