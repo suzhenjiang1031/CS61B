@@ -258,15 +258,18 @@ public class Model {
                             board.move(x, size() - 3, currTile);
                         }
                     }
-                    if (t3 != null) {
-                        if (t3.value() == currTile.value() && !t3.wasMerged()) {
-                            myValue *= 2;
-                            board.move(x, size() - 3, currTile);
-                            score += myValue;
-                        }
+                    }
+
+                if (t3 != null) {
+                    if (t3.value() == currTile.value() && !t3.wasMerged()) {
+                        myValue *= 2;
+                        board.move(x, size() - 3, currTile);
+                        score += myValue;
                     }
                 }
+
             }
+
 
         }
 
@@ -281,7 +284,7 @@ public class Model {
     public void tiltColumn(int x) {
         // TODO: Task 7. Fill in this function.
 
-        int y = size() - 2;
+        int y = size() - 1;
         while (y >= 0) {
             Tile t = board.tile(x, y);
             if (t == null) {
