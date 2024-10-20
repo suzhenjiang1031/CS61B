@@ -1,13 +1,11 @@
-import java.util.Iterator;
-import java.util.NoSuchElementException;
-import java.util.Set;
 import java.util.HashSet;
+import java.util.Iterator;
+import java.util.Set;
 
-public class BSTMap<K extends Comparable<K>, V> implements Map61B<K, V> {
-    private Node root; // BST 根节点
-    private int size; // 节点数
+public class BSTMap<K extends Comparable<K>, V> implements Map61B<K, V>{
+    private Node root;
+    private int size;
 
-    // 节点类定义
     private class Node {
         private K key;
         private V value;
@@ -24,7 +22,15 @@ public class BSTMap<K extends Comparable<K>, V> implements Map61B<K, V> {
         size = 0;
     }
 
-    // 插入键值对，如果key已存在则更新值
+
+    /**
+     * Associates the specified value with the specified key in this map.
+     * If the map already contains the specified key, replaces the key's mapping
+     * with the value specified.
+     *
+     * @param key
+     * @param value
+     */
     @Override
     public void put(K key, V value) {
         if (key == null) throw new IllegalArgumentException("Key cannot be null");
@@ -32,7 +38,7 @@ public class BSTMap<K extends Comparable<K>, V> implements Map61B<K, V> {
     }
 
     private Node put(Node node, K key, V value) {
-        if (node == null) { // 如果到达空节点，插入新节点
+        if (node == null) {
             size++;
             return new Node(key, value);
         }
@@ -42,50 +48,67 @@ public class BSTMap<K extends Comparable<K>, V> implements Map61B<K, V> {
         } else if (cmp > 0) {
             node.right = put(node.right, key, value);
         } else {
-            node.value = value; // key 已存在，更新 value
+            node.value = value;
         }
         return node;
     }
 
-    // 获取给定key对应的值
+
+    /**
+     * Returns the value to which the specified key is mapped, or null if this
+     * map contains no mapping for the key.
+     *
+     * @param key
+     */
     @Override
     public V get(K key) {
-        if (key == null) throw new IllegalArgumentException("Key cannot be null");
+        if (key == null) return null;
         return get(root, key);
     }
 
     private V get(Node node, K key) {
-        if (node == null) return null; // 没找到
+        if (node == null) return null;
         int cmp = key.compareTo(node.key);
-        if (cmp < 0) {
-            return get(node.left, key);
-        } else if (cmp > 0) {
+        if (cmp > 0) {
             return get(node.right, key);
+        } else if (cmp < 0) {
+            return get(node.left, key);
         } else {
             return node.value;
         }
     }
 
-    // 检查是否包含指定 key
+    /**
+     * Returns whether this map contains a mapping for the specified key.
+     *
+     * @param key
+     */
     @Override
     public boolean containsKey(K key) {
         return get(key) != null;
     }
 
-    // 返回当前树的节点数
+    /**
+     * Returns the number of key-value mappings in this map.
+     */
     @Override
     public int size() {
         return size;
     }
 
-    // 清空树
+    /**
+     * Removes every mapping from this map.
+     */
     @Override
     public void clear() {
-        root = null;
         size = 0;
+        root = null;
     }
 
-    // 返回所有 key 的集合
+    /**
+     * Returns a Set view of the keys contained in this map. Not required for Lab 7.
+     * If you don't implement this, throw an UnsupportedOperationException.
+     */
     @Override
     public Set<K> keySet() {
         Set<K> keys = new HashSet<>();
@@ -100,7 +123,14 @@ public class BSTMap<K extends Comparable<K>, V> implements Map61B<K, V> {
         inOrderKeys(node.right, keys);
     }
 
-    // 删除指定的key
+    /**
+     * Removes the mapping for the specified key from this map if present,
+     * or null if there is no such mapping.
+     * Not required for Lab 7. If you don't implement this, throw an
+     * UnsupportedOperationException.
+     *
+     * @param key
+     */
     @Override
     public V remove(K key) {
         if (key == null) throw new IllegalArgumentException("Key cannot be null");
@@ -115,17 +145,15 @@ public class BSTMap<K extends Comparable<K>, V> implements Map61B<K, V> {
     private Node remove(Node node, K key) {
         if (node == null) return null;
         int cmp = key.compareTo(node.key);
-        if (cmp < 0) {
-            node.left = remove(node.left, key);
-        } else if (cmp > 0) {
+        if (cmp > 0) {
             node.right = remove(node.right, key);
+        } else if (cmp < 0) {
+            node.left = remove(node.left, key);
         } else {
-            // 找到了节点，处理三种删除情况
             if (node.left == null) return node.right;
             if (node.right == null) return node.left;
-            // 处理有两个子节点删除的情况
             Node t = node;
-            node = min(t.right);
+            node = min(t.left);
             node.right = deleteMin(t.right);
             node.left = t.left;
         }
@@ -143,22 +171,13 @@ public class BSTMap<K extends Comparable<K>, V> implements Map61B<K, V> {
         return node;
     }
 
-    // 返回一个键值对的迭代器 (中序遍历)
+    /**
+     * Returns an iterator over elements of type {@code T}.
+     *
+     * @return an Iterator.
+     */
     @Override
     public Iterator<K> iterator() {
-        return new Iterator<>() {
-            private Iterator<K> keyIterator = keySet().iterator();
-
-            @Override
-            public boolean hasNext() {
-                return keyIterator.hasNext();
-            }
-
-            @Override
-            public K next() {
-                if (!hasNext()) throw new NoSuchElementException();
-                return keyIterator.next();
-            }
-        };
+        return null;
     }
 }
