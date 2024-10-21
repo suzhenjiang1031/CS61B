@@ -178,6 +178,24 @@ public class BSTMap<K extends Comparable<K>, V> implements Map61B<K, V>{
      */
     @Override
     public Iterator<K> iterator() {
-        return null;
+        return new BSTMapIterator();
     }
+
+    private class BSTMapIterator implements Iterator<K> {
+        private Iterator<K> iter;
+
+        public BSTMapIterator() {
+            Set<K> keys = keySet();
+            iter = keys.iterator();
+        }
+
+        public boolean hasNext() {
+            return iter.hasNext();
+        }
+
+        public K next() {
+            return iterator().next();
+        }
+    }
+
 }
