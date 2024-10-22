@@ -1,52 +1,138 @@
 package deque;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.NoSuchElementException;
 
 public class ArrayDeque61B<T> implements Deque61B<T> {
+    private T[] items;
+    private int size;
+    private int nextFirst;
+    private int nextLast;
+
+    public ArrayDeque61B() {
+        items = (T[]) new Object[8];
+        size = 0;
+        nextFirst = 0;
+        nextLast = 1;
+    }
 
 
     @Override
     public void addFirst(T x) {
+        if (size == items.length) {
+            resize(items.length * 2);
+        }
+        items[nextFirst] = x;
+        nextFirst = (nextFirst - 1 + items.length) % items.length;
+        size++;
 
     }
 
     @Override
     public void addLast(T x) {
+        if (size == items.length) {
+            resize(items.length * 2);
+        }
+        items[nextLast] = x;
+        nextLast = (nextLast + 1) % items.length;
+        size++;
 
     }
 
     @Override
     public List<T> toList() {
-        return null;
+        List<T> list = new ArrayList<>();
+        for (int i = 0; i < size; i++) {
+            list.add(get(i));
+        }
+        return list;
     }
 
     @Override
     public boolean isEmpty() {
-        return false;
+        return size == 0;
     }
 
     @Override
     public int size() {
-        return 0;
+        return size;
     }
 
     @Override
     public T removeFirst() {
-        return null;
+        if (isEmpty()) {
+            return null;
+        }
+        nextFirst = (nextFirst + 1) % items.length;
+        T removedItem = items[nextFirst];
+        items[nextFirst] = null;
+        size--;
+        if (size > 0 && size == items.length / 4) {
+            resize(items.length / 2);
+        }
+        return removedItem;
     }
 
     @Override
     public T removeLast() {
-        return null;
+        if (isEmpty()) {
+            return null;
+        }
+        nextLast = (nextLast - 1 + items.length) % items.length;
+        T removedItem = items[nextLast];
+        items[nextLast] = null;
+        size--;
+        if (size > 0 && size == items.length / 4) {
+            resize(items.length / 2);
+        }
+        return removedItem;
     }
 
     @Override
     public T get(int index) {
-        return null;
+        if (index < 0 || index >= items.length) {
+            return null;
+        }
+        return items[nextFirst + 1 + index % items.length];
     }
 
     @Override
     public T getRecursive(int index) {
+        return get(index);
+    }
+
+    public void resize(int capacity) {
+        T[] newItems = (T[]) new Object[capacity];
+        int start = (nextFirst + 1) % items.length;
+        for (int i = 0; i < size; i++) {
+            newItems[i] = items[(start + i) % items.length];
+        }
+        items = newItems;
+        nextFirst = capacity - 1;
+        nextLast = size;
+    }
+
+    /**
+     * Returns {@code true} if the iteration has more elements.
+     * (In other words, returns {@code true} if {@link #next} would
+     * return an element rather than throwing an exception.)
+     *
+     * @return {@code true} if the iteration has more elements
+     */
+    @Override
+    public boolean hasNext() {
+        return false;
+    }
+
+    /**
+     * Returns the next element in the iteration.
+     *
+     * @return the next element in the iteration
+     * @throws NoSuchElementException if the iteration has no more elements
+     */
+    @Override
+    public T next() {
         return null;
     }
 }
