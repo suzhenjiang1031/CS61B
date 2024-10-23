@@ -1,8 +1,8 @@
 package deque;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.NoSuchElementException;
+import org.apache.commons.collections.iterators.ArrayIterator;
+
+import java.util.*;
 
 public class ArrayDeque61B<T> implements Deque61B<T> {
     private T[] items;
@@ -17,6 +17,36 @@ public class ArrayDeque61B<T> implements Deque61B<T> {
         nextLast = 1;
     }
 
+    public boolean contains(T x) {
+        for (int i = 0; i < size; i += 1) {
+            if (items[i].equals(x)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (!(o instanceof ArrayDeque61B)) {
+            return false;
+        }
+        ArrayDeque61B<?> other = (ArrayDeque61B<?>) o;
+        if (other.size != this.size) {
+            return false;
+        }
+
+        for (int i = 0; i < size; i++) {
+            if (!this.get(i).equals(other.get(i))) {
+                return false;
+            }
+        }
+        return true;
+
+    }
 
     @Override
     public void addFirst(T x) {
@@ -26,7 +56,6 @@ public class ArrayDeque61B<T> implements Deque61B<T> {
         items[nextFirst] = x;
         nextFirst = (nextFirst - 1 + items.length) % items.length;
         size++;
-
     }
 
     @Override
@@ -37,7 +66,6 @@ public class ArrayDeque61B<T> implements Deque61B<T> {
         items[nextLast] = x;
         nextLast = (nextLast + 1) % items.length;
         size++;
-
     }
 
     @Override
@@ -113,6 +141,37 @@ public class ArrayDeque61B<T> implements Deque61B<T> {
         nextLast = size;
     }
 
+    public Iterator<T> iterator() {
+        return new ArrayIterator();
+    }
+
+    private class ArrayDequeIterator implements Iterator<T> {
+        private int currentIndex;
+        private int remaining;
+
+        public ArrayDequeIterator() {
+            this.currentIndex = (nextFirst + 1) % items.length;
+            this.remaining = size;
+        }
+
+        @Override
+        public boolean hasNext() {
+            return remaining > 0;
+        }
+
+        @Override
+        public T next() {
+            if (!hasNext()) {
+                throw new NoSuchElementException();
+            }
+            T item = items[currentIndex];
+            currentIndex = (currentIndex + 1) % items.length;
+            remaining--;
+            return item;
+        }
+    }
+
+
     /**
      * Returns {@code true} if the iteration has more elements.
      * (In other words, returns {@code true} if {@link #next} would
@@ -122,7 +181,7 @@ public class ArrayDeque61B<T> implements Deque61B<T> {
      */
     @Override
     public boolean hasNext() {
-        return false;
+        return iterator().hasNext();
     }
 
     /**
@@ -133,6 +192,29 @@ public class ArrayDeque61B<T> implements Deque61B<T> {
      */
     @Override
     public T next() {
-        return null;
+        return iterator().next();
     }
+
+    @Override
+    public String toString() {
+        if (isEmpty()) {
+            return "[]";
+        }
+
+        StringBuilder sb = new StringBuilder();
+        sb.append("[");
+        int currentIndex = (nextFirst + 1) % items.length;
+        for (int i = 0; i < size; i++) {
+            sb.append(items[currentIndex]);
+            currentIndex = (currentIndex + 1) % items.length;
+
+            if (i != size - 1) {
+                sb.append(", ");
+            }
+        }
+        sb.append("]");
+        return sb.toString();
+    }
+
 }
+
