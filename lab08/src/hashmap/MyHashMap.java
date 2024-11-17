@@ -50,9 +50,9 @@ public class MyHashMap<K, V> implements Map61B<K, V> {
      */
     public MyHashMap(int initialCapacity, double loadFactor) {
         if (initialCapacity <= 0 || loadFactor <= 0) {
-            throw  new IllegalArgumentException("Capacity and load factor must be greater than 0.");
+            throw new IllegalArgumentException("Capacity and load factor must be greater than 0.");
         }
-        this.buckets = createBucket(initialCapacity);
+        this.buckets = createBuckets(initialCapacity);
         this.size = 0;
         this.loadFactor = loadFactor;
 
@@ -78,9 +78,14 @@ public class MyHashMap<K, V> implements Map61B<K, V> {
      * BE SURE TO CALL THIS FACTORY METHOD INSTEAD OF CREATING YOUR
      * OWN BUCKET DATA STRUCTURES WITH THE NEW OPERATOR!
      */
+
+    private Collection<Node>[] createBuckets(int capacity) {
+        return (Collection<Node>[]) new Collection[capacity];
+    }
+
     protected Collection<Node> createBucket(int capacity) {
         // TODO: Fill in this method.
-        return (Collection<Node>[]) new Collection[capacity];
+        return new LinkedList<>();
     }
 
     /*Return a data structure to be a hash table bucket.
