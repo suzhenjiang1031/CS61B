@@ -7,6 +7,10 @@ import tileengine.Tileset;
 import utils.FileUtils;
 
 import java.awt.event.KeyEvent;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.util.List;
 import java.util.Random;
 
 /**
@@ -223,6 +227,23 @@ public class GameOfLife {
         return currentState;
     }
 
+    private int countLiveNeighbors(TETile[][] tiles, int x, int y) {
+        int liveCount = 0;
+        for (int dx = -1; dx <= 1; dx++) {
+            for (int dy = -1; dy <= 1; dy++) {
+                if (dx == 0 && dy ==0) continue;
+                int neighborX = x + dx;
+                int neighborY = y + dy;
+                if (neighborX >= 0 && neighborX < width && neighborY >= 0 && neighborY < height) {
+                    if (tiles[neighborX][neighborY] == Tileset.CELL) {
+                        liveCount++;
+                    }
+                }
+            }
+        }
+        return liveCount;
+    }
+
     /**
      * At each timestep, the transitions will occur based on the following rules:
      *  1.Any live cell with fewer than two live neighbors dies, as if by underpopulation.
@@ -232,6 +253,7 @@ public class GameOfLife {
      * @param tiles
      * @return
      */
+
     public TETile[][] nextGeneration(TETile[][] tiles) {
         TETile[][] nextGen = new TETile[width][height];
         // The board is filled with Tileset.NOTHING
@@ -240,12 +262,26 @@ public class GameOfLife {
         // TODO: Implement this method so that the described transitions occur.
         // TODO: The current state is represented by TETiles[][] tiles and the next
         // TODO: state/evolution should be returned in TETile[][] nextGen.
-
-
+        for (int x = 0; x < width; x++) {
+            for (int y =0; y < height; y++) {
+                int liveNeighbors = countLiveNeighbors(tiles, x, y);
+                if (tiles[x][y] == Tileset.CELL) {
+                    if (liveNeighbors < 2 || liveNeighbors > 3) {
+                        nextGen[x][y] = Tileset.NOTHING;
+                    } else {
+                        nextGen[x][y] = Tileset.CELL;
+                    }
+                } else {
+                   if (liveNeighbors == 3) {
+                       nextGen[x][y] = Tileset.CELL;
+                   }
+                }
+            }
+        }
 
 
         // TODO: Returns the next evolution in TETile[][] nextGen.
-        return null;
+        return nextGen;
     }
 
     /**
@@ -276,8 +312,23 @@ public class GameOfLife {
         // TODO: the orientation is correct! Each line in the board should
         // TODO: end with a new line character.
 
-
-
+        StringBuilder sb = new StringBuilder();
+        sb.append(width).append(" ").append(height).append("\n");
+        for (int y = height - 1; y >= 0; y--) {
+            for (int x = 0; x < width; x++) {
+                if (currentState[x][y] == Tileset.CELL) {
+                    sb.append("1");
+                } else {
+                    sb.append("0");
+                }
+            }
+            sb.append("\n");
+        }
+        try {
+            Files.write(Paths.get(SAVE_FILE), sb.toString().getBytes());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
 
     }
@@ -288,6 +339,26 @@ public class GameOfLife {
      */
     public TETile[][] loadBoard(String filename) {
         // TODO: Read in the file.
+        try {
+            List<String> lines = Files.readAllLines(Paths.get(filename));
+            if (lines.isEmpty()) {
+                throw new IllegalArgumentException("文件内容为空");
+            }
+            String[] dimensions = lines.get(0).split(" ");
+            if (dimensions.length != 2) {
+                throw new IllegalArgumentException("第一行应包含宽度和高度，用空格分隔");
+            }
+            int loadedWidth = Integer.parseInt(dimensions[0]);
+            int loadedHeight = Integer.parseInt(dimensions[1]);
+            this.width = loadedWidth;
+            this.height = loadedHeight;
+            TETile[][] loadedBoard = new TETile[width][height];
+
+            for (int y = height - 1; lineIdx = 1; y >= 0 && lineIdx )
+
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
 
         // TODO: Split the file based on the new line character.
 
