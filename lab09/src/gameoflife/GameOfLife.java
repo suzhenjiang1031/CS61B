@@ -10,6 +10,7 @@ import java.awt.event.KeyEvent;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.time.Year;
 import java.util.List;
 import java.util.Random;
 
@@ -344,20 +345,45 @@ public class GameOfLife {
             if (lines.isEmpty()) {
                 throw new IllegalArgumentException("文件内容为空");
             }
+
             String[] dimensions = lines.get(0).split(" ");
             if (dimensions.length != 2) {
                 throw new IllegalArgumentException("第一行应包含宽度和高度，用空格分隔");
             }
+
             int loadedWidth = Integer.parseInt(dimensions[0]);
             int loadedHeight = Integer.parseInt(dimensions[1]);
             this.width = loadedWidth;
             this.height = loadedHeight;
+
             TETile[][] loadedBoard = new TETile[width][height];
 
-            for (int y = height - 1; lineIdx = 1; y >= 0 && lineIdx )
+            for (int y = height - 1, lineIdx = 1; y >= 0 && lineIdx < lines.size(); y--, lineIdx++) {
+                String line = lines.get(lineIdx);
+                for (int x = 0; x < Math.min(line.length(), width); x++) {
+                    char c = line.charAt(x);
+                    if (c == '1') {
+                        loadedBoard[x][y] = Tileset.CELL;
+                    } else {
+                        loadedBoard[x][y] = Tileset.NOTHING;
+                    }
+                }
+                for (int x = line.length(); x < width; x++) {
+                    loadedBoard[x][y] = Tileset.NOTHING;
+                }
+            }
 
+            for (int y = height - 1, lineIdx = 1; y >= 0; y--, lineIdx++) {
+                if (lineIdx >= lines.size()) {
+                    for (int x = 0; x < width; x++) {
+                        loadedBoard[x][y] = Tileset.NOTHING;
+                    }
+                }
+            }
+            return loadedBoard;
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            e.printStackTrace();
+            return new TETile[width][height];
         }
 
         // TODO: Split the file based on the new line character.
@@ -376,7 +402,6 @@ public class GameOfLife {
 
 
         // TODO: Return the board you loaded. Replace/delete this line.
-        return null;
     }
 
     /**
